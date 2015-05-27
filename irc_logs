@@ -1,0 +1,817 @@
+mcc	?'
+
+*	[Striking] (c6fe10c7@gateway/web/freenode/ip.198.254.16.199): 198.254.16.199 - http://webchat.freenode.net
+
+*	[Striking] ##emilylang 
+
+*	[Striking] herbert.freenode.net :DE
+
+*	[Striking] is logged in as Strikingwolf
+
+*	[striking] End of WHOIS list.
+
+Striking	I was going to ask if it was ok to write in Ruby
+
+Striking	sorry for the 3 minute gap, I started working on my array utils for emily
+
+Striking	:P
+
+Striking	I also responded to your questions on github if you want to take a look
+
+mcc	ya, looking now
+
+mcc	and i saw your twitter question, was gonna respond ^_^ anyway um
+
+mcc	so, i don't see a problem with ruby inherently, but a few notes
+
+mcc	first off, i'd personally prefer python, since (1) we're already using python for some bundled tools with emily, and (2) i'm more familiar with python
+
+mcc	but!
+
+Striking	that's fine
+
+mcc	if you're writing this, i don't think i should be too pusy about that
+
+mcc	pushy
+
+Striking	I know python enough to use it
+
+mcc	ok
+
+mcc	a second thought is, whatever we do
+
+Striking	definitely not a problem
+
+mcc	cool. i'd definitely be happier with that
+
+mcc	cuz like
+
+mcc	i would rather not, in order to use emily, you must also install python and ruby :P
+
+mcc	anyway second thing, i think it should be set up such that it can eventually be replaced with a pure Emily implementation
+
+mcc	right now that's impossible
+
+Striking	yeah
+
+Striking	A pure emily implementation would be best, but it isn't possible right now
+
+Striking	anyway I gtg for a sec, leaving a place so I'll transition to mobile
+
+*	Striking has quit (Quit: Page closed)
+
+*	striking (a689f834@gateway/web/freenode/ip.166.137.248.52) has joined ##emilylang
+
+striking	alright back
+
+striking	so python, what about the other stuff, is that all good?
+
+mcc	hi hi
+
+mcc	ok so
+
+mcc	sorry trying to gather my thoughts
+
+striking	ait's finr
+
+striking	gah mobile keyboard
+
+mcc	heh
+
+mcc	so i have been thinking about this a while, and i have some contradictory thoughts
+
+mcc	i think you have the right idea we should do this *as simple as possible*
+
+mcc	one thing worth noting, a feature i was thinking about adding
+
+striking	but it should still be fully featured?
+
+mcc	well
+
+mcc	i think the important thing
+
+mcc	is to make something we can grow out later.
+
+mcc	so maybe it's worth asking which features we need or don't,
+
+striking	modularity, i'm good at that
+
+mcc	heh
+
+mcc	and which features, we can avoid now, but if we design it right we can *leave room for* later
+
+striking	downloading and being able to require easily
+
+striking	seeing cyclic dependencies
+
+mcc	so here are two features i am considering for 0.3, the first one i almost added for 0.2
+
+striking	alright
+
+mcc	first off, right now, EMILY_PACKAGE_PATH must be a single path
+
+mcc	but it would make sense to make it a series of colon-delimited paths, like PATH or PYTHON_WHATEVER uses.
+
+striking	also, a nice feature that would need to be in the language would be a lib loader
+
+mcc	that would not be so hard for me to implement.
+
+mcc	a lib loader?
+
+striking	to load libraries with
+
+striking	it would look into the place where emily stores libs
+
+mcc	what are you thinking of "libraries" as, here?
+
+striking	also, multiple paths would allow me to do that, i think
+
+striking	llibraries = packages = dependencies
+
+mcc	ok
+
+mcc	so i am going to think out loud for a minute here
+
+striking	alright
+
+mcc	and some of this is what i was thinking today
+
+mcc	i think there's some things to sort of preserve
+
+striking	mhm
+
+mcc	i think the language itself should preserve the idea of, *from the user perspective*, a single root
+
+mcc	the "package" repository
+
+striking	yeah, that would be good
+
+mcc	i think this should be, at least for now, something people can assume is there community-wide-- like, they might not have the "package.nettools.http" package, but it's the same "package.nettools.http" package everyone else sees
+
+striking	do you mean that in the same way ruby gems has there official site
+
+mcc	However, I think long term, we can move things around. The language is versioned, so maybe between like version 0.9 and 1.0, we can rearrange the package heirarchy. The package loader should be smart enough to be able to tell what's happening.
+
+mcc	i don't know. can you describe ruby gems to me?
+
+mcc	one other thing— the package heirarchy right now is all inside of "emily."
+
+mcc	i don't know what the best way to parcel out "top level" names is
+
+mcc	but i'm afraid of like, i stuff a bunch of stuff into the "emily." heirarchy, and then later i realize it isn't so good and we should not have put that in the core packages.
+
+striking	https://rubygems.org
+
+mcc	python has made this mistake sometimes
+
+mcc	i've used gems to install things
+
+striking	ruby gems is a central repo for all gems
+
+mcc	so, given all these thoughts
+
+striking	so you know that package a is the same for everyone
+
+mcc	right right ok
+
+mcc	so, here's a proposal
+
+mcc	we say that the "top level" of the repo is like, usernames
+
+mcc	so "emily." is the core repository
+
+mcc	and i'd register like, "andi." or something
+
+striking	kinda
+
+mcc	sort of like with github, where the first part of the url is person/ or organization/
+
+striking	emily wouldn't exist in our central repo
+
+mcc	and then at some point, maybe 1.0, there can be considered a big re-org
+
+mcc	well, why not?
+
+striking	unless you want that for easier updating
+
+mcc	i can think of things that i would like in the "emily." heirarchy but i don't want to ship with all versions of the interpreter
+
+striking	ah i see
+
+striking	one sec switching back to comp in a sec
+
+mcc	ok
+
+mcc	i'll keep going when you get back :)
+
+*	Strikingwolf (~Strikingw@2601:b:2700:de5:ad59:43b2:134e:b8f7) has joined ##emilylang
+
+*	striking has quit (Disconnected by services)
+
+*	Strikingwolf is now known as Striking
+
+Striking	Alright
+
+Striking	so I imagine the package system as ruby gems
+
+mcc	well, so here's a proposal
+
+mcc	at the moment, _ is illegal in filenames, and i think probably, i will continue to say, you can't begin a package name with a _
+
+mcc	because i want to like… i want to make the emily "package" format into something kind of smart
+
+Striking	yes
+
+mcc	like, maybe eventually there will be a way to put a _index.em into a package directory
+
+mcc	and that will be executed after preparing the scope with the items from the directory
+
+mcc	or it will be possible to put kinds of data other than .em files into a package
+
+mcc	like, blah.txt would add the field "blah" containing a string
+
+Striking	yes
+
+mcc	I should note here that two of my motivations for Emily are (1) i want to be able to bundle to gether the "project" files for something and bundle it into a game, put it in a zip file or something, and (2) i want it to be possible to bundle up packages for javascript usage
+
+mcc	like, a package should be a hibernated object.
+
+mcc	also at some point i need to distinguish a "module" from a "package" but i haven't done this yet >_>
+
+Striking	interesting...
+
+mcc	here's one proposition, and i don't know how gems works, so if gems works better you can let me know
+
+mcc	have you used opam?
+
+Striking	I haven't
+
+mcc	they have an interesting process where the "package repository" is hosted out of literally a github repo somewhere
+
+Striking	Yeah, I've seen that
+
+mcc	if you want to add a package to the repo, you make a pull request on the files that contain all this
+
+Striking	I don't like that method :/
+
+mcc	ok
+
+mcc	i'm going to continue, and you can tell me why not :)
+
+mcc	but, my thought is… i would rather this be as simple as possible
+
+Striking	because it makes it where respond time for each user of the system is higher
+
+mcc	respond time?
+
+mcc	if someone affiliated with emily has to run a web service
+
+mcc	that is a big problem from my perspective
+
+Striking	If a lot of people want to make packages...
+
+mcc	ah, i see
+
+mcc	well, is it really a good idea to let people put things in our download service with no review?
+
+Striking	no
+
+Striking	but community review would be better
+
+mcc	hm
+
+mcc	what do you mean by "community review"?
+
+mcc	anyway i think having both the served by git would be a good idea
+
+mcc	err
+
+Striking	Once the community gives enough upvotes to a package it gets put in the official repo
+
+mcc	ok so let me describe what i'm really thinking
+
+mcc	i think having both the central "package index" and the individual packages served via git is a good idea
+
+mcc	i hate git
+
+Striking	Also, ruby gems lets it be put into their system, no problem there
+
+mcc	but git does have shallow clone, which lets you check out one version of a repo
+
+Striking	yeah
+
+mcc	so i think i was imagining... there could be a repository which for each version of emily hosts a repo contiaining like... one configuration file or a small set thereof
+
+mcc	i propose using JSON or something like it for everything
+
+Striking	I think YAML would be better
+
+Striking	because YAML is a super-set
+
+mcc	what is better about YAML?
+
+mcc	a superset?
+
+Striking	Of json
+
+Striking	so json is valid in YAML
+
+mcc	what does it contain that json does not?
+
+Striking	so you could use either
+
+mcc	i know it has comments
+
+Striking	mcc: it is a lot cleaner
+
+mcc	i thought yaml was a different format
+
+Striking	no it isn't
+
+Striking	it is superset, if the program interprets YAML it automatically interprets JSON
+
+mcc	so here is an example yaml file
+
+mcc	http://www.yaml.org/start.html
+
+mcc	that is not json?
+
+Striking	it isn't
+
+mcc	or do you mean yaml interpreters are required to interpret jasonjson?
+
+Striking	pretty much
+
+Striking	because all json files are valid YAML
+
+mcc	huh.
+
+mcc	so the reason i am nervous about json is actually *because* yaml is more powerful
+
+Striking	?
+
+mcc	yaml for example contains typing information
+
+Striking	yes
+
+mcc	there have been security holes because yaml types allowed unexpected data to be loaded
+
+mcc	i don't know what these configuration files would contain other than numbers, strings and structures
+
+mcc	and i am nervous to use a format which contains more power than we need
+
+Striking	that's reasonable
+
+Striking	json is fine then
+
+mcc	ok
+
+mcc	anyway, my proposal is: This one big json file, or one json file per package, or something, in a "index" repository
+
+Striking	yep
+
+Striking	and then we parse the repo for the info we need?
+
+mcc	each json file describes a package, the package notes the git address and branch and such
+
+mcc	yeah
+
+Striking	and people send PRs to submit their packages
+
+Striking	that will work
+
+mcc	there's some other info i think we should make sure is in there but never mind
+
+mcc	yeah. and like, if someday, that gets unweidly
+
+mcc	it's just git
+
+Striking	yeah
+
+Striking	I prefer using the web service tactic, but that will work to
+
+mcc	so we could like, set up an offsite community moderation thing
+
+Striking	I mean it worked for homebrew and opam
+
+mcc	i like this cuz we could use github or bitbucket to host the thing
+
+Striking	Yeah, that is nice
+
+mcc	ok a couple other thoughts
+
+mcc	i think it should be possible for packages to be rooted anywhere
+
+Striking	although you can also host websites on github
+
+Striking	mcc: to install them anywhere?
+
+mcc	not web services i think
+
+mcc	like, it should be possible for a package's name to be like, emily.ffi.cpp
+
+Striking	yeah
+
+Striking	that is easy
+
+mcc	the only rules should be (1) the "first element" in the package name, should be controled by a specific person or organization who registers it
+
+mcc	and (2) nobody should ever check in a package whose path corresponds to a file in another repo
+
+mcc	so like, maybe it's ok for there to be a package emily.ffi.cpp, and a package emily.ffi.cpp.clang
+
+Striking	yeah
+
+mcc	as long as there's no clang file in emily.ffi.cpp
+
+mcc	i don't think this has to be enforce dby the software
+
+mcc	i think these can just be social rules
+
+Striking	yeo
+
+Striking	*yep
+
+Striking	that is fine
+
+mcc	ok
+
+mcc	one other thought
+
+mcc	i think, when the package is actually installed
+
+mcc	the actual install location on disk
+
+Striking	yes
+
+mcc	like, ~/.emilylibs/0.3/emily/ffi/cpp
+
+mcc	there should be a _package.json file
+
+mcc	which contains SOME sort of metadata
+
+Striking	yeah
+
+mcc	i'm not sure if it's useful metadata!
+
+Striking	that is good to have
+
+mcc	but like, enough that if someone is browsing the files by hand
+
+mcc	they can see where it came from
+
+Striking	yes
+
+Striking	we could just store the metadata that we use
+
+mcc	that could make sense, and then we wouldn't have to require people to put it in the repository
+
+Striking	what do you mean?
+
+Striking	oh
+
+Striking	the repo could just contain a git link
+
+mcc	oh, sorry
+
+mcc	i mean
+
+mcc	ok so here are two possibilities
+
+mcc	possibility one, whoever created the repo, puts the _package.json file in the repo themselves
+
+mcc	possibility two, the "metadata" repo has a file with a name like emily.ffi.cpp.json
+
+Striking	possibility two
+
+mcc	and the installer just copies emily.ffi.cpp.json to _package.json
+
+mcc	when it installs
+
+Striking	Yeah
+
+Striking	that would be better in my mind
+
+mcc	i think that makes sense
+
+Striking	also, do we want a way to build the dependencies so that the end-user (of the program that depends on libraries) doesn't have to have the libraries installed
+
+mcc	ah!
+
+mcc	so i have a thought about that
+
+mcc	dependencies meaning external dependencies?
+
+Striking	I do to :P
+
+Striking	yes
+
+mcc	ok so
+
+mcc	uh 1sec
+
+mcc	so, i want to support lots of different environments.
+
+mcc	i want to support windows.
+
+mcc	i want to support, like, you're on javascript.
+
+Striking	yep
+
+mcc	so i think, any one package
+
+mcc	should have a "dependencies" and also a "external dependencies" list
+
+mcc	"external dependencies" is a list of like, specific names
+
+mcc	maybe names plus versions
+
+Striking	yes definitely names + versions
+
+mcc	everything should be versioned if it can be
+
+mcc	eventually i want a way for a piece of software to demand versions of specific libraries
+
+mcc	like, in code
+
+mcc	but never mind that
+
+mcc	anyawy, somewhere we could have a list of external things that satisfy these external dependencies
+
+mcc	like, maybe one dependency is, idk, libffi
+
+mcc	and we have just "external dependency" {"name":"libffi","version":">0.4"}. something like this.
+
+Striking	yep
+
+mcc	and then in the config repo, there's a externalDependencies folder
+
+mcc	containing a "brew" folder
+
+mcc	containing a libffi.json
+
+mcc	which indicates, if you're using homebrew, you load libffi from the "libffi" recipe
+
+mcc	so that way, we could have different sets of external dependency maps
+
+mcc	for like, debian, and homebrew, and various other things
+
+Striking	eah
+
+mcc	and maybe in some places, nothing is available at all
+
+Striking	*yeah
+
+mcc	like, if you are using Javascript, then like… libffi just isn't available
+
+Striking	mhm
+
+mcc	so if you tell it, sophia install emily.ffi.cpp, and that depends on libffi, and you're compiling for javascript, it will say... no, you can't do that
+
+Striking	yeah
+
+Striking	However, before we do that we should do the simple dependencies which are purely emily
+
+Striking	and you said you want to package emily programs in zips and hand them to the end-user, correct?
+
+mcc	oh!
+
+mcc	i want that to be an *option*, for the emily package loader.
+
+mcc	i think, for downloading, we should use git
+
+mcc	just do a git shallow clone
+
+mcc	probably by invoking the literal git command line tool
+
+mcc	i think it would make sense to like
+
+mcc	inside the config file, "source" could be like, a triplet
+
+mcc	"method", "url", "version-key"
+
+Striking	yep
+
+mcc	and it could be like, method:"git", url:"github/whatever", version-key:"some long hash"
+
+mcc	and that would leave for flexibility later
+
+Striking	yes
+
+Striking	because we could install different methods
+
+mcc	yeah
+
+mcc	i like the idea of some of this being meta
+
+mcc	like the package manager being able to install new ways of installing packages :D
+
+Striking	Another thing, for packaging we could have the lib loader in emily search for a lib folder in your project directory first
+
+Striking	then search the .emilylibs
+
+Striking	and when we do 'sophia build'
+
+mcc	hm
+
+Striking	it would create the lib folder and drop everything required in
+
+mcc	oh, that's an interesting idea
+
+mcc	um
+
+mcc	i think i'd rather have it not automatically search ./lib
+
+Striking	that way end-users of emily programs that use sophia wouldn't have to deal with sophia :P
+
+mcc	but rather if they want ./lib they can request it
+
+Striking	mcc: hmmm
+
+Striking	the problem with that is it makes it so end-users do have to use sophia to build their projects
+
+Striking	which means you can't zip up your emily programs to end-users
+
+mcc	well, i think
+
+mcc	what i would suggest then
+
+mcc	is sophia build
+
+mcc	creates either a lib/ directory or a lib.zip directory
+
+mcc	and then when you package up a program
+
+mcc	the entry point is something like #!/emily --package-path=lib.zip
+
+mcc	i kind of
+
+Striking	so sophia would add those lines in?
+
+mcc	so...
+
+mcc	ok, a few things
+
+mcc	first off, one thing i want to be an OPTION, is i think there should be something like in python 
+
+mcc	where you can say emily -m andi.tools.packager
+
+mcc	and it would run andi.tools.packager as a program
+
+mcc	that would let you distribute programs through something like sophia exclusively, *if* you wanted.
+
+mcc	[[ incidentally, sophia is an *adorable* name, it might not be the clearest name for a package manager-- if i ever subsume sophia into emily itself, i might change the name :) ]]
+
+Striking	you lost me
+
+mcc	[[ but if you're writing this you should name it what you like ^_^ ]]
+
+mcc	so in python
+
+mcc	you can have a package which is also a program
+
+mcc	or can be optionally run as a program
+
+mcc	so there is a mercurial.core package
+
+mcc	and you can say python -m mercurial.core
+
+mcc	and it will run mercurial.core as a program
+
+Striking	ah
+
+Striking	easy
+
+mcc	yes
+
+mcc	and i could imagine, like
+
+mcc	one of the things that something like sophia could do
+
+Striking	We could say main.em is the file to be run if run as a program
+
+Striking	I'm going to create a repo for sophia soon(tm) btw
+
+mcc	something like that, yes. what i was intending is it would run the "main" function  in whatever package
+
+mcc	but, the trick is, a file named "main" in that package is the same as a function named "main" in a file :D
+
+mcc	so idk
+
+Striking	yeah
+
+Striking	I think the file option is better
+
+mcc	if possible i'd like to support both.
+
+Striking	yeah, but we can start with the file option and add in the function option later if need be
+
+Striking	I'll be hosting the repo on github btw
+
+mcc	the way i'm *thinking* about handling this it might be the same
+
+mcc	ok
+
+mcc	i might ask my friend misty to review the design once one starts forming?
+
+mcc	i might get opinion ated about the design, sorry, i want to make sure this is right from the start if that's easy :)
+
+mcc	thank you so much for trying this! :D
+
+Striking	no problem
+
+mcc	um, one other thing
+
+mcc	what do you think about licensing?
+
+Striking	I'm really interested in the language so i want to see it succeed :)
+
+mcc	if you implement it in python and then i reimplement in emily later, that might not matter, but
+
+mcc	atm Emily itself is X11 licensed
+
+Striking	mcc: I would like MIT
+
+mcc	oh goo
+
+mcc	good
+
+mcc	that's the same as i'm using
+
+mcc	at some point i am probably going to have a "contribution policy"
+
+mcc	which basically is just
+
+mcc	a clear statement of, by contributing to the emily repo, you are licensing us the code under the same license it's distributed as plus any patents that are yours and are relevant
+
+mcc	but that doesn't matter if you're working in your own repo anyway :D
+
+Striking	yes :P
+
+mcc	oh, but i never explained that other thing
+
+Striking	But yeah, I'll add you as a contributor
+
+Striking	just so if you want to add something you can
+
+mcc	so, let's say that there's some way to say like
+
+mcc	ok
+
+mcc	some way to say "sophia export"
+
+mcc	i'm making this up
+
+Striking	https://github.com/Strikingwolf/Sophia
+
+Striking	That is the repo just as an fyi
+
+Striking	And getting the design right from the start is good
+
+mcc	(i got the email!)
+
+mcc	and that would create a libs.zip, plus an emily file starting with #!/path/to/emily --package-path-append=libs.zip
+
+mcc	and then running that would run the program
+
+mcc	that's one possibility
+
+Striking	yes
+
+mcc	long term, i want there to be a way to bundle a set of packages plus an emily interpreter plus a program into an exe
+
+mcc	but that will be closer to when the compiler happens
+
+mcc	at some point there will be a compiler
+
+Striking	cool
+
+mcc	and it will be able to analyze a program and get a graph of all the packages it uses
+
+mcc	so it will be possible to say, like, please package up ONLY the things from the standard library you need
+
+Striking	yep
+
+mcc	anyway, short term this is not a big deal
+
+mcc	but i think having something like a "sophia build" that creates a standalone dir containing all needed packages
+
+mcc	would make a ton of sense
+
+Striking	Yeah it isn't that big
+
+Striking	That would be a good thing to have IMO
+
+Striking	Also, irc client is derping, I need to restart it
+
+*	Striking has quit (Quit: Leaving...)
+
+*	Striking has quit (Quit: Leaving...)
+
+*	Strikingwolf (~Strikingw@2601:b:2700:de5:ad59:43b2:134e:b8f7) has joined ##emilylang
+
+Strikingwolf	Alright, I think we have enough info to build the base program for now
+
+Strikingwolf	Could you send me the logs of this conversation?
+
+mcc	cooooool
