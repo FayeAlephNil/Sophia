@@ -8,6 +8,7 @@ Packages would be stored in a central git repository. This repository would esse
     * version-key
     * url (url to use with method)
     * method (git or similar)
+  * list of dependencies
 
 ## Naming
 Packages can be named anything, however there are two rules for naming packages
@@ -19,17 +20,19 @@ For example, it's ok for there to be a package emily.ffi.cpp, and a package emil
 These rules are not enforced by Sophia! They are social rules and not adhering to them is bad practice.
 
 ## Dependency Installation
-Dependencies will install to one of two places. If they are local dependencies they will install to .emilylocallibs in the project folder. If they are global dependencies then they will install to ~/.emilylibs. They will also install with a metadata file called \_package.json which will be a clone of the metadata file in the central repo
+Dependencies will install to one of two places. If they are local dependencies they will install to \_emilylocallibs in the project folder. If they are global dependencies then they will install to ~/.emilylibs. They will also install with a metadata file called \_package.json which will be a clone of the metadata file in the central repo
 
 ## Sophia dependency file
 This file declared as name.sophia where name is a variable will describe the dependencies of the project. It will a json file that stores the names of dependencies, their versions, and whether they are local or global.
 
 ## Sophia Commands
 
-* get - Installs a single package based on a name (takes --local or --global)
-* getAll - Installs the packages specified in the .sophia file (takes --local or --global)
+* install - Installs a single package based on a name (takes --local or --global)
+* installAll - Installs the packages specified in the .sophia file (takes --local or --global)
 * build - builds a sophia projects dependencies installing them all locally (in .lib) so you can zip up your project and give it to an end-user and they don't need to run ```sophia getAll```
-* run - this will run a library. This works by checking the library for a main.em file in the library and running it if it exists
+* update - This will update your installation of Sophia with the current version of the main repo
+* upgrade - Update/Upgrade a specific dependency
+* upgradeAll - Updates/Upgrades packages specified in the .sophia file
 
 ## Usage in Programs
 
