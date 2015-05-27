@@ -22,7 +22,7 @@ These rules are not enforced by Sophia! They are social rules and not adhering t
 Dependencies will install to one of two places. If they are local dependencies they will install to .emilylocallibs in the project folder. If they are global dependencies then they will install to ~/.emilylibs. They will also install with a metadata file called \_package.json which will be a clone of the metadata file in the central repo
 
 ## Sophia dependency file
-This file declared as name.sophia where name is variable will describe the dependencies of the project. It will a json file that stores the names of dependencies, their versions, and whether they are local or global.
+This file declared as name.sophia where name is a variable will describe the dependencies of the project. It will a json file that stores the names of dependencies, their versions, and whether they are local or global.
 
 ## Sophia Commands
 
