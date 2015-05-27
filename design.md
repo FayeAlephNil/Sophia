@@ -5,10 +5,11 @@ This is the design document for the sophia package manager for the Emily program
 Packages would be stored in a central git repository. This repository would essentially be a list of metadata json files that would contain the following information
   * name
   * source
-    * version-key
+    * version-key (tag that method uses for version)
     * url (url to use with method)
     * method (git or similar)
   * list of dependencies
+  * version (for Sophia's purposes)
 
 ## Naming
 Packages can be named anything, however there are two rules for naming packages
